@@ -103,7 +103,7 @@ class SampleDataCLR implements CommandLineRunner {
 interface SharePriceRepository extends JpaRepository<SharePrice, Long> {
 
     @RestResource(path = "by-name")
-    Collection<SharePrice> findBySharePriceName(@Param("rn") String rn);
+    Collection<SharePrice> findBySharePriceName(@Param("share") String rn);
 }
 
 @Entity
