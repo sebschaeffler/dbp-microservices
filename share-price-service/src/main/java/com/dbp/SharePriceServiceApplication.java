@@ -1,5 +1,7 @@
 package com.dbp;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -9,6 +11,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Input;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -21,6 +24,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +36,8 @@ import javax.persistence.Id;
 import java.util.Collection;
 import java.util.Random;
 import java.util.stream.Stream;
+
+import static springfox.documentation.builders.PathSelectors.regex;
 
 interface SharePriceChannels {
     @Input
@@ -37,10 +47,32 @@ interface SharePriceChannels {
 @EnableBinding(SharePriceChannels.class)
 @EnableDiscoveryClient
 @SpringBootApplication
+@EnableSwagger2
 public class SharePriceServiceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SharePriceServiceApplication.class, args);
+    }
+
+    @Bean
+    public Docket sharePriceApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("share-price")
+                .apiInfo(apiInfo())
+                .select()
+                .paths(regex("/sharePrices.*"))
+                .build();
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("Spring REST API for Share Prices with Swagger")
+                .description("Spring REST API for Share Prices with Swagger")
+                .termsOfServiceUrl("http://www.dbg-dbp.com")
+                .contact("Sebastien")
+                .license("Open Bar")
+                .version("1.0")
+                .build();
     }
 }
 
@@ -73,7 +105,7 @@ class MessageRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/message")
-    String read() {
+    private String read() {
         return this.value;
     }
 }
@@ -102,8 +134,11 @@ class SampleDataCLR implements CommandLineRunner {
 @RepositoryRestResource
 interface SharePriceRepository extends JpaRepository<SharePrice, Long> {
 
+    @RestResource(path = "by-id")
+    SharePrice findById(@Param("id") Long id);
+
     @RestResource(path = "by-name")
-    Collection<SharePrice> findBySharePriceName(@Param("share") String rn);
+    Collection<SharePrice> findBySharePriceName(@Param("share") String sharePriceName);
 }
 
 @Entity
@@ -134,14 +169,20 @@ class SharePrice {
         this.price = value;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "Id", required = true)
     public Long getId() {
         return id;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The name of the share", required = true)
     public String getSharePriceName() {
         return sharePriceName;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The share price", required = true)
     public Double getPrice() {
         return price;
     }
