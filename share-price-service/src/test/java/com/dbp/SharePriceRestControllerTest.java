@@ -59,6 +59,12 @@ public class SharePriceRestControllerTest {
     }
 
     @Test
+    public void sharePricesFound() throws Exception {
+        mockMvc.perform(get("/sharePrices/0"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void sharePricesNotFound() throws Exception {
         mockMvc.perform(get("/sharePrices/dummy"))
                 .andExpect(status().isBadRequest());
