@@ -1,31 +1,21 @@
 package com.dbp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.util.Collection;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -91,52 +81,4 @@ interface SharePriceRepository extends JpaRepository<SharePrice, Long> {
 
     @RestResource(path = "by-name")
     Collection<SharePrice> findBySharePriceName(@Param("share") String sharePriceName);
-}
-
-@Entity
-class SharePrice {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    private String sharePriceName;
-
-    private Double price;
-
-    public SharePrice() {
-    }
-
-    @Override
-    public String toString() {
-        return "SharePrice{" +
-                "id=" + id +
-                ", sharePriceName='" + sharePriceName + '\'' +
-                ", sharePrice='" + price + '\'' +
-                '}';
-    }
-
-    public SharePrice(String sharePriceName, Double value) {
-        this.sharePriceName = sharePriceName;
-        this.price = value;
-    }
-
-    @JsonProperty(required = true)
-    @ApiModelProperty(notes = "Id", required = true)
-    public Long getId() {
-        return id;
-    }
-
-    @JsonProperty(required = true)
-    @ApiModelProperty(notes = "The name of the share", required = true)
-    public String getSharePriceName() {
-        return sharePriceName;
-    }
-
-    @JsonProperty(required = true)
-    @ApiModelProperty(notes = "The share price", required = true)
-    public Double getPrice() {
-        return price;
-    }
-
 }
