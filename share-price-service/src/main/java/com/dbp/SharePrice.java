@@ -21,6 +21,9 @@ public class SharePrice {
 
     private Double price;
 
+    public SharePrice() {
+    }
+
     @Override
     public String toString() {
         return "SharePrice{" +
