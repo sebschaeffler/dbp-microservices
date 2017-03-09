@@ -1,6 +1,8 @@
 ## dbp-microservices
 DBP Microservices
 
+[![Coverage Status](https://coveralls.io/repos/github/Aggouri/dbp-microservices/badge.svg?branch=master)](https://coveralls.io/github/Aggouri/dbp-microservices?branch=master)
+
 This project is intended to create micro-services based on Springboot and Netflix (but not only) most popular open source tools:
 
 - Config service: centralised micro service that hosts all configs
