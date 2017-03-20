@@ -21,6 +21,7 @@ public class SharePrice {
 
     private Double price;
 
+    // Required for JPA...
     public SharePrice() {
     }
 

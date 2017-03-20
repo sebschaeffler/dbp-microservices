@@ -1,5 +1,6 @@
 package com.dbp;
 
+import io.swagger.models.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +23,9 @@ import java.util.stream.Stream;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 
+/**
+ * Created by sebastienschaeffler on 08/03/2017.
+ */
 @SpringBootApplication
 @EnableSwagger2
 public class SharePriceServiceApplication {
@@ -45,7 +49,13 @@ public class SharePriceServiceApplication {
                 .title("Spring REST API for Share Prices with Swagger")
                 .description("Spring REST API for Share Prices with Swagger")
                 .termsOfServiceUrl("http://www.dbg-dbp.com")
-                .contact("Sebastien")
+                .contact(
+                        new springfox.documentation.service.Contact(
+                                "Sebastien",
+                                "",
+                                "sebastien.schaeffler@clearstream.com"
+                        )
+                )
                 .license("Open Bar")
                 .version("1.0")
                 .build();
